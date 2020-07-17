@@ -7,7 +7,7 @@ export default class Player {
         this.x = 325;
         this.y = 325;
         this.input = new Input();
-        this.direction;
+        this.direction;                     // Vector direction
 
         const wizardCharacter = {
             image: new Image(),
@@ -31,10 +31,15 @@ export default class Player {
     }
 
     update() {
-        this.direction = this.input.getInputDirection();
+        this.direction = this.input.getInputDirection();               // Sets vector direction to player input
+
+        // Logic for making conga line follow each other. Does this by having
+        // each member take the position of the character in front of them
         for (let i = this.conga.length - 2; i >= 0; i--) {
             this.conga[i + 1].position = { ...this.conga[i].position }
         }
+
+        // Moves leader in direction of player input
         this.conga[0].position.x += (this.direction.x * 20)
         this.conga[0].position.y += (this.direction.y * 20)
     }

@@ -198,6 +198,7 @@ var Input = /*#__PURE__*/function () {
   function Input() {
     _classCallCheck(this, Input);
 
+    // Sets initial direction to be moving up
     this.inputDirection = {
       x: 0,
       y: -1
@@ -212,7 +213,8 @@ var Input = /*#__PURE__*/function () {
       document.addEventListener('keydown', function (e) {
         switch (e.keyCode) {
           case 37:
-            if (_this.inputDirection.x !== 0) break;
+            if (_this.inputDirection.x !== 0) break; // Makes it so you can't move left when moving left or right
+
             _this.inputDirection = {
               x: -1,
               y: 0
@@ -220,7 +222,8 @@ var Input = /*#__PURE__*/function () {
             break;
 
           case 38:
-            if (_this.inputDirection.y !== 0) break;
+            if (_this.inputDirection.y !== 0) break; // Makes it so you can't move up when moving up or down
+
             _this.inputDirection = {
               x: 0,
               y: -1
@@ -228,7 +231,8 @@ var Input = /*#__PURE__*/function () {
             break;
 
           case 39:
-            if (_this.inputDirection.x !== 0) break;
+            if (_this.inputDirection.x !== 0) break; // Makes it so you can't move right when moving right or left
+
             _this.inputDirection = {
               x: 1,
               y: 0
@@ -236,7 +240,8 @@ var Input = /*#__PURE__*/function () {
             break;
 
           case 40:
-            if (_this.inputDirection.y !== 0) break;
+            if (_this.inputDirection.y !== 0) break; // Makes it so you can't move down when moving down or up
+
             _this.inputDirection = {
               x: 0,
               y: 1
@@ -290,7 +295,8 @@ var Player = /*#__PURE__*/function () {
     this.x = 325;
     this.y = 325;
     this.input = new _input__WEBPACK_IMPORTED_MODULE_0__["default"]();
-    this.direction;
+    this.direction; // Vector direction
+
     var wizardCharacter = {
       image: new Image(),
       width: 16,
@@ -327,11 +333,14 @@ var Player = /*#__PURE__*/function () {
   _createClass(Player, [{
     key: "update",
     value: function update() {
-      this.direction = this.input.getInputDirection();
+      this.direction = this.input.getInputDirection(); // Sets vector direction to player input
+      // Logic for making conga line follow each other. Does this by having
+      // each member take the position of the character in front of them
 
       for (var i = this.conga.length - 2; i >= 0; i--) {
         this.conga[i + 1].position = _objectSpread({}, this.conga[i].position);
-      }
+      } // Moves leader in direction of player input
+
 
       this.conga[0].position.x += this.direction.x * 20;
       this.conga[0].position.y += this.direction.y * 20;
