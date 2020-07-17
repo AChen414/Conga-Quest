@@ -290,25 +290,32 @@ var Player = /*#__PURE__*/function () {
   function Player(ctx) {
     _classCallCheck(this, Player);
 
-    this.playerSpeed = 3;
+    this.playerSpeed = 5;
     this.ctx = ctx;
     this.x = 325;
     this.y = 325;
     this.input = new _input__WEBPACK_IMPORTED_MODULE_0__["default"]();
     this.direction; // Vector direction
 
+    this.characterFrameIndex = 0;
     var wizardCharacter = {
-      image: new Image(),
+      image: [new Image(), new Image(), new Image(), new Image()],
       width: 16,
       height: 28
     };
-    wizardCharacter.image.src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f0.png';
+    wizardCharacter.image[0].src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f0.png';
+    wizardCharacter.image[1].src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f1.png';
+    wizardCharacter.image[2].src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f2.png';
+    wizardCharacter.image[3].src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f3.png';
     var knightCharacter = {
-      image: new Image(),
+      image: [new Image(), new Image(), new Image(), new Image()],
       width: 16,
       height: 28
     };
-    knightCharacter.image.src = './assets/dungeon_tileset/frames/knight_f_run_anim_f0.png';
+    knightCharacter.image[0].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f0.png';
+    knightCharacter.image[1].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f1.png';
+    knightCharacter.image[2].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f2.png';
+    knightCharacter.image[3].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f3.png';
     this.conga = [{
       sprite: wizardCharacter,
       position: {
@@ -344,6 +351,12 @@ var Player = /*#__PURE__*/function () {
 
       this.conga[0].position.x += this.direction.x * 20;
       this.conga[0].position.y += this.direction.y * 20;
+
+      if (this.characterFrameIndex === 3) {
+        this.characterFrameIndex = 0;
+      } else {
+        this.characterFrameIndex += 1;
+      }
     }
   }, {
     key: "draw",
@@ -351,7 +364,7 @@ var Player = /*#__PURE__*/function () {
       var _this = this;
 
       this.conga.forEach(function (character) {
-        _this.ctx.drawImage(character.sprite.image, character.position.x, character.position.y);
+        _this.ctx.drawImage(character.sprite.image[_this.characterFrameIndex], character.position.x, character.position.y);
       });
     }
   }]);
