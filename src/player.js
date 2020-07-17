@@ -32,8 +32,8 @@ export default class Player {
 
         this.conga = [
             { sprite: wizardCharacter, position: { x: 325, y: 325 } },
-            { sprite: knightCharacter, position: { x: 325, y: 345 } },
-            { sprite: wizardCharacter, position: { x: 325, y: 365 } }
+            { sprite: knightCharacter, position: { x: 325, y: 360 } },
+            { sprite: wizardCharacter, position: { x: 325, y: 395 } }
         ];
     }
 
@@ -47,9 +47,10 @@ export default class Player {
         }
 
         // Moves leader in direction of player input
-        this.conga[0].position.x += (this.direction.x * 20)
-        this.conga[0].position.y += (this.direction.y * 20)
+        this.conga[0].position.x += (this.direction.x * 35)
+        this.conga[0].position.y += (this.direction.y * 35)
         
+        // Loops through character's different movement animations
         if (this.characterFrameIndex === 3) {
             this.characterFrameIndex = 0;
         } else {
@@ -59,7 +60,18 @@ export default class Player {
 
     draw() {
         this.conga.forEach(character => {
-            this.ctx.drawImage(character.sprite.image[this.characterFrameIndex], character.position.x, character.position.y)
+            this.ctx.drawImage(
+                character.sprite.image[this.characterFrameIndex],
+                0,
+                0,
+                character.sprite.width,
+                character.sprite.height,
+                character.position.x,
+                character.position.y,
+                character.sprite.width * 1.75,
+                character.sprite.height * 1.75
+            )
+
         })
     }
 }

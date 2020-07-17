@@ -86,6 +86,76 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/enemy.js":
+/*!**********************!*\
+  !*** ./src/enemy.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Enemy; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Enemy = /*#__PURE__*/function () {
+  function Enemy(ctx) {
+    _classCallCheck(this, Enemy);
+
+    this.ctx = ctx;
+    this.characterFrameIndex = 0;
+    var skeletonEnemy = {
+      image: [new Image(), new Image(), new Image(), new Image()],
+      width: 16,
+      height: 16
+    };
+    skeletonEnemy.image[0].src = './assets/dungeon_tileset/frames/skelet_run_anim_f0.png';
+    skeletonEnemy.image[1].src = './assets/dungeon_tileset/frames/skelet_run_anim_f1.png';
+    skeletonEnemy.image[2].src = './assets/dungeon_tileset/frames/skelet_run_anim_f2.png';
+    skeletonEnemy.image[3].src = './assets/dungeon_tileset/frames/skelet_run_anim_f3.png';
+    this.conga = [{
+      sprite: skeletonEnemy,
+      position: {
+        x: 200,
+        y: 200
+      }
+    }];
+  }
+
+  _createClass(Enemy, [{
+    key: "enemySpawnPoint",
+    value: function enemySpawnPoint() {}
+  }, {
+    key: "update",
+    value: function update() {
+      if (this.characterFrameIndex === 3) {
+        this.characterFrameIndex = 0;
+      } else {
+        this.characterFrameIndex += 1;
+      }
+    }
+  }, {
+    key: "draw",
+    value: function draw() {
+      var _this = this;
+
+      this.conga.forEach(function (enemy) {
+        _this.ctx.drawImage(enemy.sprite.image[_this.characterFrameIndex], 0, 0, enemy.sprite.width, enemy.sprite.height, enemy.position.x, enemy.position.y, enemy.sprite.width * 2, enemy.sprite.height * 2);
+      });
+    }
+  }]);
+
+  return Enemy;
+}();
+
+
+
+/***/ }),
+
 /***/ "./src/game.js":
 /*!*********************!*\
   !*** ./src/game.js ***!
@@ -98,11 +168,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
 /* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player */ "./src/player.js");
 /* harmony import */ var _input__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./input */ "./src/input.js");
+/* harmony import */ var _enemy__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./enemy */ "./src/enemy.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -113,7 +185,9 @@ var Game = /*#__PURE__*/function () {
 
     this.ctx = ctx;
     this.lastRenderTime = 0;
+    this.gameOver = false;
     this.player = new _player__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx);
+    this.enemy = new _enemy__WEBPACK_IMPORTED_MODULE_2__["default"](this.ctx);
   }
 
   _createClass(Game, [{
@@ -126,6 +200,10 @@ var Game = /*#__PURE__*/function () {
     key: "animate",
     value: function animate(currentTime) {
       var _this = this;
+
+      if (this.gameOver) {
+        return alert('You lose');
+      }
 
       window.requestAnimationFrame(function (currentTime) {
         _this.animate(currentTime);
@@ -141,12 +219,14 @@ var Game = /*#__PURE__*/function () {
     key: "update",
     value: function update() {
       this.player.update();
+      this.enemy.update();
     }
   }, {
     key: "draw",
     value: function draw() {
       this.ctx.clearRect(0, 0, 650, 650);
       this.player.draw();
+      this.enemy.draw();
     }
   }]);
 
@@ -326,13 +406,13 @@ var Player = /*#__PURE__*/function () {
       sprite: knightCharacter,
       position: {
         x: 325,
-        y: 345
+        y: 360
       }
     }, {
       sprite: wizardCharacter,
       position: {
         x: 325,
-        y: 365
+        y: 395
       }
     }];
   }
@@ -349,8 +429,8 @@ var Player = /*#__PURE__*/function () {
       } // Moves leader in direction of player input
 
 
-      this.conga[0].position.x += this.direction.x * 20;
-      this.conga[0].position.y += this.direction.y * 20;
+      this.conga[0].position.x += this.direction.x * 35;
+      this.conga[0].position.y += this.direction.y * 35; // Loops through character's different movement animations
 
       if (this.characterFrameIndex === 3) {
         this.characterFrameIndex = 0;
@@ -364,7 +444,7 @@ var Player = /*#__PURE__*/function () {
       var _this = this;
 
       this.conga.forEach(function (character) {
-        _this.ctx.drawImage(character.sprite.image[_this.characterFrameIndex], character.position.x, character.position.y);
+        _this.ctx.drawImage(character.sprite.image[_this.characterFrameIndex], 0, 0, character.sprite.width, character.sprite.height, character.position.x, character.position.y, character.sprite.width * 1.75, character.sprite.height * 1.75);
       });
     }
   }]);
