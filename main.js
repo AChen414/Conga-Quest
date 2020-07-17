@@ -212,6 +212,7 @@ var Input = /*#__PURE__*/function () {
       document.addEventListener('keydown', function (e) {
         switch (e.keyCode) {
           case 37:
+            if (_this.inputDirection.x !== 0) break;
             _this.inputDirection = {
               x: -1,
               y: 0
@@ -219,6 +220,7 @@ var Input = /*#__PURE__*/function () {
             break;
 
           case 38:
+            if (_this.inputDirection.y !== 0) break;
             _this.inputDirection = {
               x: 0,
               y: -1
@@ -226,6 +228,7 @@ var Input = /*#__PURE__*/function () {
             break;
 
           case 39:
+            if (_this.inputDirection.x !== 0) break;
             _this.inputDirection = {
               x: 1,
               y: 0
@@ -233,6 +236,7 @@ var Input = /*#__PURE__*/function () {
             break;
 
           case 40:
+            if (_this.inputDirection.y !== 0) break;
             _this.inputDirection = {
               x: 0,
               y: 1
