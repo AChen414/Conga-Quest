@@ -211,11 +211,12 @@ var Player = /*#__PURE__*/function () {
   _createClass(Player, [{
     key: "update",
     value: function update() {
-      console.log('Update player');
+      this.x += 5;
     }
   }, {
     key: "draw",
     value: function draw() {
+      this.ctx.clearRect(0, 0, 650, 650);
       this.ctx.fillRect(this.x + 100, this.y + 100, this.character.width, this.character.height);
       this.ctx.drawImage(this.character.image, this.x, this.y);
     }
