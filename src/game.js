@@ -1,12 +1,14 @@
-const PLAYER_SPEED = 2
+import Player from './player';
 
-class Game {
+export default class Game {
     constructor(ctx) {
         this.ctx = ctx;
         this.lastRenderTime = 0;
+        this.player = new Player(this.ctx);
     }
 
     start() {
+        console.log(this.ctx)
         this.animate();
     }
 
@@ -15,10 +17,19 @@ class Game {
             this.animate(currentTime);
         });
         const secondsSinceLastRender = (currentTime - this.lastRenderTime) / 1000
-        if (secondsSinceLastRender < 1 / PLAYER_SPEED) return ;
+        if (secondsSinceLastRender < 1 / this.player.playerSpeed) return ;
         this.lastRenderTime = currentTime;
         console.log('Render');
+
+        this.update();
+        this.draw();
+    }
+
+    update() {
+        this.player.update();
+    }
+
+    draw() {
+        this.player.draw();
     }
 }
-
-module.exports = Game; 
