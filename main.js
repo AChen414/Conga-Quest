@@ -97,11 +97,13 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
 /* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player */ "./src/player.js");
+/* harmony import */ var _input__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./input */ "./src/input.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -143,6 +145,7 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "draw",
     value: function draw() {
+      this.ctx.clearRect(0, 0, 650, 650);
       this.player.draw();
     }
   }]);
@@ -175,6 +178,80 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
+/***/ "./src/input.js":
+/*!**********************!*\
+  !*** ./src/input.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Input; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Input = /*#__PURE__*/function () {
+  function Input() {
+    _classCallCheck(this, Input);
+
+    this.inputDirection = {
+      x: 0,
+      y: -1
+    };
+  }
+
+  _createClass(Input, [{
+    key: "getInputDirection",
+    value: function getInputDirection() {
+      var _this = this;
+
+      document.addEventListener('keydown', function (e) {
+        switch (e.keyCode) {
+          case 37:
+            _this.inputDirection = {
+              x: -1,
+              y: 0
+            };
+            break;
+
+          case 38:
+            _this.inputDirection = {
+              x: 0,
+              y: -1
+            };
+            break;
+
+          case 39:
+            _this.inputDirection = {
+              x: 1,
+              y: 0
+            };
+            break;
+
+          case 40:
+            _this.inputDirection = {
+              x: 0,
+              y: 1
+            };
+            break;
+        }
+      });
+      return this.inputDirection;
+    }
+  }]);
+
+  return Input;
+}();
+
+
+;
+
+/***/ }),
+
 /***/ "./src/player.js":
 /*!***********************!*\
   !*** ./src/player.js ***!
@@ -185,40 +262,84 @@ document.addEventListener("DOMContentLoaded", function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Player; });
+/* harmony import */ var _input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./input */ "./src/input.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+
+
 var Player = /*#__PURE__*/function () {
   function Player(ctx) {
     _classCallCheck(this, Player);
 
-    this.playerSpeed = 2;
+    this.playerSpeed = 3;
     this.ctx = ctx;
     this.x = 325;
     this.y = 325;
-    var characterSprite = {
+    this.input = new _input__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    this.direction;
+    var wizardCharacter = {
       image: new Image(),
       width: 16,
       height: 28
     };
-    characterSprite.image.src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f0.png';
-    this.character = characterSprite;
+    wizardCharacter.image.src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f0.png';
+    var knightCharacter = {
+      image: new Image(),
+      width: 16,
+      height: 28
+    };
+    knightCharacter.image.src = './assets/dungeon_tileset/frames/knight_f_run_anim_f0.png';
+    this.conga = [{
+      sprite: wizardCharacter,
+      position: {
+        x: 325,
+        y: 325
+      }
+    }, {
+      sprite: knightCharacter,
+      position: {
+        x: 325,
+        y: 345
+      }
+    }, {
+      sprite: wizardCharacter,
+      position: {
+        x: 325,
+        y: 365
+      }
+    }];
   }
 
   _createClass(Player, [{
     key: "update",
     value: function update() {
-      this.x += 5;
+      this.direction = this.input.getInputDirection();
+
+      for (var i = this.conga.length - 2; i >= 0; i--) {
+        this.conga[i + 1].position = _objectSpread({}, this.conga[i].position);
+      }
+
+      this.conga[0].position.x += this.direction.x * 20;
+      this.conga[0].position.y += this.direction.y * 20;
     }
   }, {
     key: "draw",
     value: function draw() {
-      this.ctx.clearRect(0, 0, 650, 650);
-      this.ctx.fillRect(this.x + 100, this.y + 100, this.character.width, this.character.height);
-      this.ctx.drawImage(this.character.image, this.x, this.y);
+      var _this = this;
+
+      this.conga.forEach(function (character) {
+        _this.ctx.drawImage(character.sprite.image, character.position.x, character.position.y);
+      });
     }
   }]);
 

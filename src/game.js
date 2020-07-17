@@ -1,4 +1,5 @@
 import Player from './player';
+import Input from './input';
 
 export default class Game {
     constructor(ctx) {
@@ -21,6 +22,7 @@ export default class Game {
         this.lastRenderTime = currentTime;
         console.log('Render');
 
+        
         this.update();
         this.draw();
     }
@@ -30,6 +32,7 @@ export default class Game {
     }
 
     draw() {
+        this.ctx.clearRect(0, 0, 650, 650);
         this.player.draw();
     }
 }
