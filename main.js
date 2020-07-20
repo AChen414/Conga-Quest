@@ -433,7 +433,7 @@ var Player = /*#__PURE__*/function () {
       if (this.outsideMap() || this.enemyCollision()) {
         this.alive = false;
         this.conga.forEach(function (character) {
-          character.sprite.image;
+          character.sprite = deathCharacter;
         });
       }
 

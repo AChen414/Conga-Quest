@@ -52,7 +52,7 @@ export default class Player {
         if (this.outsideMap() || this.enemyCollision()) {
             this.alive = false;
             this.conga.forEach(character => {
-                character.sprite.image 
+                character.sprite = deathCharacter
             })
         };
     };
