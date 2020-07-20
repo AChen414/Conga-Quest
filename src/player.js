@@ -9,6 +9,7 @@ export default class Player {
         this.input = new Input();
         this.direction;                     // Vector direction
         this.characterFrameIndex = 0;
+        this.alive = true;
 
         const wizardCharacter = {
             image: [new Image(), new Image(), new Image(), new Image()],
@@ -30,12 +31,31 @@ export default class Player {
         knightCharacter.image[2].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f2.png';
         knightCharacter.image[3].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f3.png';
 
+        const deathCharacter = {
+            image: [new Image(), new Image(), new Image(), new Image()],
+            width: 16,
+            height: 28
+        }
+        deathCharacter.image[0].src = './assets/follower-gravestone.png';
+        deathCharacter.image[1].src = './assets/follower-gravestone.png';
+        deathCharacter.image[2].src = './assets/follower-gravestone.png';
+        deathCharacter.image[3].src = './assets/follower-gravestone.png';
+
         this.conga = [
             { sprite: wizardCharacter, position: { x: 325, y: 325 } },
             { sprite: knightCharacter, position: { x: 325, y: 360 } },
             { sprite: wizardCharacter, position: { x: 325, y: 395 } }
         ];
     }
+
+    checkDeath() {
+        if (this.outsideMap() || this.enemyCollision()) {
+            this.alive = false;
+            this.conga.forEach(character => {
+                character.sprite.image 
+            })
+        };
+    };
 
     update() {
         this.direction = this.input.getInputDirection();               // Sets vector direction to player input

@@ -378,6 +378,7 @@ var Player = /*#__PURE__*/function () {
     this.direction; // Vector direction
 
     this.characterFrameIndex = 0;
+    this.alive = true;
     var wizardCharacter = {
       image: [new Image(), new Image(), new Image(), new Image()],
       width: 16,
@@ -396,6 +397,15 @@ var Player = /*#__PURE__*/function () {
     knightCharacter.image[1].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f1.png';
     knightCharacter.image[2].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f2.png';
     knightCharacter.image[3].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f3.png';
+    var deathCharacter = {
+      image: [new Image(), new Image(), new Image(), new Image()],
+      width: 16,
+      height: 28
+    };
+    deathCharacter.image[0].src = './assets/follower-gravestone.png';
+    deathCharacter.image[1].src = './assets/follower-gravestone.png';
+    deathCharacter.image[2].src = './assets/follower-gravestone.png';
+    deathCharacter.image[3].src = './assets/follower-gravestone.png';
     this.conga = [{
       sprite: wizardCharacter,
       position: {
@@ -418,6 +428,18 @@ var Player = /*#__PURE__*/function () {
   }
 
   _createClass(Player, [{
+    key: "checkDeath",
+    value: function checkDeath() {
+      if (this.outsideMap() || this.enemyCollision()) {
+        this.alive = false;
+        this.conga.forEach(function (character) {
+          character.sprite.image;
+        });
+      }
+
+      ;
+    }
+  }, {
     key: "update",
     value: function update() {
       this.direction = this.input.getInputDirection(); // Sets vector direction to player input
