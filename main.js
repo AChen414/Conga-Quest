@@ -201,6 +201,8 @@ var Game = /*#__PURE__*/function () {
     value: function animate(currentTime) {
       var _this = this;
 
+      this.gameOver = !this.player.alive;
+
       if (this.gameOver) {
         return alert('You lose');
       }
@@ -397,15 +399,15 @@ var Player = /*#__PURE__*/function () {
     knightCharacter.image[1].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f1.png';
     knightCharacter.image[2].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f2.png';
     knightCharacter.image[3].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f3.png';
-    var deathCharacter = {
+    this.deathCharacter = {
       image: [new Image(), new Image(), new Image(), new Image()],
       width: 16,
       height: 28
     };
-    deathCharacter.image[0].src = './assets/follower-gravestone.png';
-    deathCharacter.image[1].src = './assets/follower-gravestone.png';
-    deathCharacter.image[2].src = './assets/follower-gravestone.png';
-    deathCharacter.image[3].src = './assets/follower-gravestone.png';
+    this.deathCharacter.image[0].src = './assets/follower-gravestone.png';
+    this.deathCharacter.image[1].src = './assets/follower-gravestone.png';
+    this.deathCharacter.image[2].src = './assets/follower-gravestone.png';
+    this.deathCharacter.image[3].src = './assets/follower-gravestone.png';
     this.conga = [{
       sprite: wizardCharacter,
       position: {
@@ -430,26 +432,47 @@ var Player = /*#__PURE__*/function () {
   _createClass(Player, [{
     key: "checkDeath",
     value: function checkDeath() {
+      var _this = this;
+
       if (this.outsideMap() || this.enemyCollision()) {
         this.alive = false;
         this.conga.forEach(function (character) {
-          character.sprite = deathCharacter;
-        });
+          character.sprite = _this.deathCharacter;
+        }); // Stops moving on death
+
+        this.direction.x = 0;
+        this.direction.y = 0;
       }
 
       ;
     }
   }, {
+    key: "outsideMap",
+    value: function outsideMap() {
+      if (this.conga[0].position.x < 0 || this.conga[0].position.x > 634 || this.conga[0].position.y < 0 || this.conga[0].position.y > 623) {
+        return true;
+      }
+
+      ;
+    }
+  }, {
+    key: "enemyCollision",
+    value: function enemyCollision() {}
+  }, {
     key: "update",
     value: function update() {
-      this.direction = this.input.getInputDirection(); // Sets vector direction to player input
-      // Logic for making conga line follow each other. Does this by having
-      // each member take the position of the character in front of them
+      // Only gets direction when alive
+      if (this.alive) {
+        this.direction = this.input.getInputDirection(); // Sets vector direction to player input
+        // Logic for making conga line follow each other. Does this by having
+        // each member take the position of the character in front of them
 
-      for (var i = this.conga.length - 2; i >= 0; i--) {
-        this.conga[i + 1].position = _objectSpread({}, this.conga[i].position);
-      } // Moves leader in direction of player input
+        for (var i = this.conga.length - 2; i >= 0; i--) {
+          this.conga[i + 1].position = _objectSpread({}, this.conga[i].position);
+        }
+      }
 
+      ; // Moves leader in direction of player input
 
       this.conga[0].position.x += this.direction.x * 35;
       this.conga[0].position.y += this.direction.y * 35; // Loops through character's different movement animations
@@ -459,14 +482,16 @@ var Player = /*#__PURE__*/function () {
       } else {
         this.characterFrameIndex += 1;
       }
+
+      this.checkDeath();
     }
   }, {
     key: "draw",
     value: function draw() {
-      var _this = this;
+      var _this2 = this;
 
       this.conga.forEach(function (character) {
-        _this.ctx.drawImage(character.sprite.image[_this.characterFrameIndex], 0, 0, character.sprite.width, character.sprite.height, character.position.x, character.position.y, character.sprite.width * 1.75, character.sprite.height * 1.75);
+        _this2.ctx.drawImage(character.sprite.image[_this2.characterFrameIndex], 0, 0, character.sprite.width, character.sprite.height, character.position.x, character.position.y, character.sprite.width * 1.75, character.sprite.height * 1.75);
       });
     }
   }]);

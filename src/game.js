@@ -17,6 +17,7 @@ export default class Game {
     }
 
     animate(currentTime) {
+        this.gameOver = !this.player.alive;
         if (this.gameOver) {
             return alert('You lose');
         }
