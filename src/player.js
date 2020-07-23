@@ -14,7 +14,7 @@ export default class Player {
         const wizardCharacter = {
             image: [new Image(), new Image(), new Image(), new Image()],
             width: 16,
-            height: 28
+            height: 24
         };
         wizardCharacter.image[0].src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f0.png';
         wizardCharacter.image[1].src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f1.png';
@@ -24,7 +24,7 @@ export default class Player {
         const knightCharacter = {
             image: [new Image(), new Image(), new Image(), new Image()],
             width: 16,
-            height: 28
+            height: 24
         };
         knightCharacter.image[0].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f0.png';
         knightCharacter.image[1].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f1.png';
@@ -33,8 +33,8 @@ export default class Player {
 
         this.deathCharacter = {
             image: [new Image(), new Image(), new Image(), new Image()],
-            width: 16,
-            height: 28
+            width: 18,
+            height: 24
         }
         this.deathCharacter.image[0].src = './assets/follower-gravestone.png';
         this.deathCharacter.image[1].src = './assets/follower-gravestone.png';
@@ -48,31 +48,49 @@ export default class Player {
         ];
     }
 
+    // checkDeath() {
+    //     if (this.outsideMap() || this.enemyCollision()) {
+    //         this.alive = false;
+    //         this.conga.forEach(character => {
+    //             character.sprite = this.deathCharacter;
+    //         })
+
+    //         // Stops moving on death
+    //         this.direction.x = 0;
+    //         this.direction.y = 0;
+    //     };
+    // };
+
+    // outsideMap() {
+    //     if (this.conga[0].position.x < 0) {          // When dying off the left
+    //         // this.conga[0].position.x = 0;
+    //         return true
+    //     } else if (this.conga[0].position.x > 634) { // When dying off the right
+    //         // this.conga[0].position.x = 634;
+    //         return true;
+    //     } else if (this.conga[0].position.y < 0) {
+
+    //         return true;
+    //     } else if (this.conga[0].position.y > 626) {
+    //         return true;
+    //     };
+    // };
+
+    // enemyCollision() {
+
+    // };
+
     checkDeath() {
-        if (this.outsideMap() || this.enemyCollision()) {
-            this.alive = false;
+        if (!this.alive) {
             this.conga.forEach(character => {
                 character.sprite = this.deathCharacter;
             })
-
-            // Stops moving on death
-            this.direction.x = 0;
-            this.direction.y = 0;
-        };
-    };
-
-    outsideMap() {
-        if (this.conga[0].position.x < 0 || this.conga[0].position.x > 634 || this.conga[0].position.y < 0 || this.conga[0].position.y > 623) {
-            return true;
-        };
-    };
-
-    enemyCollision() {
-
-    };
+        }
+    }
 
     update() {
-        // Only gets direction when alive
+        this.checkDeath();
+        // Only gets direction when alive (stops moving when dead)
         if (this.alive) {
             this.direction = this.input.getInputDirection();               // Sets vector direction to player input
             
@@ -94,7 +112,6 @@ export default class Player {
             this.characterFrameIndex += 1;
         }
 
-        this.checkDeath();
     }
 
     draw() {

@@ -185,7 +185,8 @@ var Game = /*#__PURE__*/function () {
 
     this.ctx = ctx;
     this.lastRenderTime = 0;
-    this.gameOver = false;
+    this.counter = 0; // this.gameOver = false;
+
     this.player = new _player__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx);
     this.enemy = new _enemy__WEBPACK_IMPORTED_MODULE_2__["default"](this.ctx);
   }
@@ -201,10 +202,8 @@ var Game = /*#__PURE__*/function () {
     value: function animate(currentTime) {
       var _this = this;
 
-      this.gameOver = !this.player.alive;
-
-      if (this.gameOver) {
-        return alert('You lose');
+      if (this.counter > 3) {
+        this.player.alive = this.gameOver();
       }
 
       window.requestAnimationFrame(function (currentTime) {
@@ -213,10 +212,40 @@ var Game = /*#__PURE__*/function () {
       var secondsSinceLastRender = (currentTime - this.lastRenderTime) / 1000;
       if (secondsSinceLastRender < 1 / this.player.playerSpeed) return;
       this.lastRenderTime = currentTime;
+      this.counter += 1;
       console.log('Render');
       this.update();
       this.draw();
     }
+  }, {
+    key: "gameOver",
+    value: function gameOver() {
+      if (this.outsideMap() || this.enemyCollision()) {
+        return false;
+      }
+
+      return true;
+    }
+  }, {
+    key: "outsideMap",
+    value: function outsideMap() {
+      if (this.player.conga[0].position.x < 0) {
+        // When dying off the left
+        return true;
+      } else if (this.player.conga[0].position.x > 634) {
+        // When dying off the right
+        return true;
+      } else if (this.player.conga[0].position.y < 0) {
+        // When dying off the top
+        return true;
+      } else if (this.player.conga[0].position.y > 626) {
+        // When dying off the bottom
+        return true;
+      }
+    }
+  }, {
+    key: "enemyCollision",
+    value: function enemyCollision() {}
   }, {
     key: "update",
     value: function update() {
@@ -384,7 +413,7 @@ var Player = /*#__PURE__*/function () {
     var wizardCharacter = {
       image: [new Image(), new Image(), new Image(), new Image()],
       width: 16,
-      height: 28
+      height: 24
     };
     wizardCharacter.image[0].src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f0.png';
     wizardCharacter.image[1].src = './assets/dungeon_tileset/frames/wizzard_f_run_anim_f1.png';
@@ -393,7 +422,7 @@ var Player = /*#__PURE__*/function () {
     var knightCharacter = {
       image: [new Image(), new Image(), new Image(), new Image()],
       width: 16,
-      height: 28
+      height: 24
     };
     knightCharacter.image[0].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f0.png';
     knightCharacter.image[1].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f1.png';
@@ -401,8 +430,8 @@ var Player = /*#__PURE__*/function () {
     knightCharacter.image[3].src = './assets/dungeon_tileset/frames/knight_f_run_anim_f3.png';
     this.deathCharacter = {
       image: [new Image(), new Image(), new Image(), new Image()],
-      width: 16,
-      height: 28
+      width: 18,
+      height: 24
     };
     this.deathCharacter.image[0].src = './assets/follower-gravestone.png';
     this.deathCharacter.image[1].src = './assets/follower-gravestone.png';
@@ -427,41 +456,50 @@ var Player = /*#__PURE__*/function () {
         y: 395
       }
     }];
-  }
+  } // checkDeath() {
+  //     if (this.outsideMap() || this.enemyCollision()) {
+  //         this.alive = false;
+  //         this.conga.forEach(character => {
+  //             character.sprite = this.deathCharacter;
+  //         })
+  //         // Stops moving on death
+  //         this.direction.x = 0;
+  //         this.direction.y = 0;
+  //     };
+  // };
+  // outsideMap() {
+  //     if (this.conga[0].position.x < 0) {          // When dying off the left
+  //         // this.conga[0].position.x = 0;
+  //         return true
+  //     } else if (this.conga[0].position.x > 634) { // When dying off the right
+  //         // this.conga[0].position.x = 634;
+  //         return true;
+  //     } else if (this.conga[0].position.y < 0) {
+  //         return true;
+  //     } else if (this.conga[0].position.y > 626) {
+  //         return true;
+  //     };
+  // };
+  // enemyCollision() {
+  // };
+
 
   _createClass(Player, [{
     key: "checkDeath",
     value: function checkDeath() {
       var _this = this;
 
-      if (this.outsideMap() || this.enemyCollision()) {
-        this.alive = false;
+      if (!this.alive) {
         this.conga.forEach(function (character) {
           character.sprite = _this.deathCharacter;
-        }); // Stops moving on death
-
-        this.direction.x = 0;
-        this.direction.y = 0;
+        });
       }
-
-      ;
     }
-  }, {
-    key: "outsideMap",
-    value: function outsideMap() {
-      if (this.conga[0].position.x < 0 || this.conga[0].position.x > 634 || this.conga[0].position.y < 0 || this.conga[0].position.y > 623) {
-        return true;
-      }
-
-      ;
-    }
-  }, {
-    key: "enemyCollision",
-    value: function enemyCollision() {}
   }, {
     key: "update",
     value: function update() {
-      // Only gets direction when alive
+      this.checkDeath(); // Only gets direction when alive (stops moving when dead)
+
       if (this.alive) {
         this.direction = this.input.getInputDirection(); // Sets vector direction to player input
         // Logic for making conga line follow each other. Does this by having
@@ -482,8 +520,6 @@ var Player = /*#__PURE__*/function () {
       } else {
         this.characterFrameIndex += 1;
       }
-
-      this.checkDeath();
     }
   }, {
     key: "draw",
