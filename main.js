@@ -262,7 +262,8 @@ var Game = /*#__PURE__*/function () {
   }]);
 
   return Game;
-}();
+}(); //webpack --watch --mode=development
+
 
 
 

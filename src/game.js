@@ -71,3 +71,5 @@ export default class Game {
         this.enemy.draw();
     }
 }
+
+//webpack --watch --mode=development
